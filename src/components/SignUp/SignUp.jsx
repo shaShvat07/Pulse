@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -34,7 +35,7 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="/">
         Pulse
       </Link>{' '}
       {new Date().getFullYear()}
@@ -48,6 +49,7 @@ const defaultTheme = createTheme();
 export default function SignUp() {
 
   const [err, setErr] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -96,9 +98,8 @@ export default function SignUp() {
               email,
               photoURL: downloadURL,
             });
-            await setDoc(doc(db, "userChat", res.user.id), {});
-
-            
+            // await setDoc(doc(db, "userChat", res.user.id), {});
+            navigate("/");
           });
         }
       );
@@ -192,7 +193,7 @@ export default function SignUp() {
             {err && <span> Something went wrong </span>}
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

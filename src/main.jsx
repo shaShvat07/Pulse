@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom';
 // importing mui themes
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { AuthContextProvider } from './context/AuthContext.jsx';
 
 const darkTheme = createTheme({
   palette: {
@@ -14,12 +14,13 @@ const darkTheme = createTheme({
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <ThemeProvider theme={darkTheme}>
-  <CssBaseline />
-    <BrowserRouter>
+  <AuthContextProvider>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
       <React.StrictMode>
         <App />
       </React.StrictMode>
-    </BrowserRouter>
-  </ThemeProvider>,
+    </ThemeProvider>,
+  </AuthContextProvider>
+
 )

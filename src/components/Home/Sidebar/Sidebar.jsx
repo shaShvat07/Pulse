@@ -14,7 +14,8 @@ import Avatar from '@mui/material/Avatar';
 import useStyles from './styles';
 import Search from '../Search';
 import { blue, pink } from '@mui/material/colors';
-
+import { signOut } from "firebase/auth";
+import { auth } from "../../../firebase.js";
 const friends = ['Arushi', 'Zaina', 'Anisha']
 const Sidebar = () => {
     const classes = useStyles();
@@ -28,7 +29,7 @@ const Sidebar = () => {
                 </Typography>
             </Toolbar>
             <Toolbar className={classes.signOutButton}>
-                <Button size="medium" color="error" variant="contained">Sign Out</Button>
+                <Button onClick={() => signOut(auth)} size="medium" color="error" variant="contained">Sign Out</Button>
             </Toolbar>
             </div>
             </div>
