@@ -9,7 +9,26 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { auth, storage, db } from '../../firebase.js';
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 function Copyright(props) {
   return (
@@ -27,14 +46,71 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+
+  const [err, setErr] = useState(false);
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+    const firstName = data.get('firstName');
+    const lastName = data.get('lastName');
+    const displayName = firstName + lastName;
+    console.log(displayName);
+    const file = data.get('file');
+    console.log(file);
+
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(res);
+      const storageRef = ref(storage, displayName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          setErr(true);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            console.log('File available at', downloadURL);
+            await updateProfile(res.user, {
+              displayName,
+              photoURL: downloadURL,
+            });
+            await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL,
+            });
+            await setDoc(doc(db, "userChat", res.user.id), {});
+
+            
+          });
+        }
+      );
+
+
+    }
+    catch (err) {
+      setErr(true);
+    }
   };
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -98,6 +174,12 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <Button sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                  Upload your avatar
+                  <VisuallyHiddenInput name='file' label='file' type="file" accept='image/*' id="file" required />
+                </Button>
+              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -107,6 +189,7 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
+            {err && <span> Something went wrong </span>}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
