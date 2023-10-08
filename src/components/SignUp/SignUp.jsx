@@ -57,16 +57,17 @@ export default function SignUp() {
     const password = data.get('password');
     const firstName = data.get('firstName');
     const lastName = data.get('lastName');
-    const displayName = firstName + lastName;
+    const displayName = firstName + " " + lastName;
     console.log(displayName);
     const file = data.get('file');
     console.log(file);
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(res);
       const storageRef = ref(storage, displayName);
       const uploadTask = uploadBytesResumable(storageRef, file);
+      console.log(res);
+
 
       uploadTask.on('state_changed',
         (snapshot) => {
@@ -103,15 +104,11 @@ export default function SignUp() {
           });
         }
       );
-
-
     }
     catch (err) {
       setErr(true);
     }
   };
-
-
 
   return (
     <ThemeProvider theme={defaultTheme}>

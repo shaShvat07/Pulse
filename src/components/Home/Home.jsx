@@ -39,7 +39,7 @@ function ResponsiveDrawer(props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex'}}>
+    <Box sx={{ display: 'flex', overflowY: 'hidden'}}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -58,10 +58,10 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Avatar sx={{ bgcolor: blue[500] }}>K</Avatar>
+          <Avatar sx={{ bgcolor: blue[500] }}>A</Avatar>
           &nbsp;&nbsp;
           <Typography variant="h6" noWrap component="div">
-            Kunal Sharma
+            Aditya Sharma
           </Typography>
         </Toolbar>
       </AppBar>
@@ -99,7 +99,7 @@ function ResponsiveDrawer(props) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, height:'100vh', width: { sm: '100%' } }}
+        sx={{ flexGrow: 1, p: 3, height:'96.1vh', width: { sm: '100%' } }}
       >
         <Toolbar />
         <Chatbox />

@@ -13,6 +13,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import image from "../../pulse.png"; 
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, storage, db } from '../../firebase.js';
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 function Copyright(props) {
   return (
@@ -37,13 +43,22 @@ const defaultTheme = createTheme({
   
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
+  const [err, setErr] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/");
+    }
+    catch (err) {
+      setErr(true);
+    }
   };
 
   return (
@@ -113,6 +128,7 @@ export default function SignInSide() {
               >
                 Sign In
               </Button>
+              {err && <span> Something went wrong </span>}
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">

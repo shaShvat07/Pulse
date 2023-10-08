@@ -6,15 +6,12 @@ export default makeStyles(() => ({
     backgroundColor: '#202020',
     position: 'relative',
     overflowX: 'hidden',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     flexDirection: 'column',
     marginTop: '-16px',
     marginRight: '-18px',
     marginLeft: '-18px',
     borderRadius: '8px',
     padding: '10px',
-    '::-webkit-scrollbar': {
-      display: 'none',
-    },
   }
 }));

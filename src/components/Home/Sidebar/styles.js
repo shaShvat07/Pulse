@@ -14,5 +14,9 @@ export default makeStyles(() => ({
   navbarP: {
     backgroundImage:  `url(${imgLink})`,
     backgroundSize: 'cover',
+  },
+  wholeSidebar: {
+    scrollbarWidth: 'none',
+    msOverflowStyle: 'none',
   }
 }));

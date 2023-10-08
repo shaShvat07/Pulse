@@ -12,20 +12,25 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import useStyles from './styles';
-import Search from '../Search';
+import { Search } from '../index';
 import { blue, pink } from '@mui/material/colors';
 import { signOut } from "firebase/auth";
 import { auth } from "../../../firebase.js";
-const friends = ['Arushi', 'Zaina', 'Anisha']
+import { AuthContext } from '../../../context/AuthContext';
+import { useContext } from "react";
+import { Chats } from '../index';
+
 const Sidebar = () => {
     const classes = useStyles();
+    const {currentUser} = useContext(AuthContext)
     return (
-        <>
+        <div className={classes.wholeSidebar}>
             <div className={classes.navbarP}>
             <div className={classes.combine}>
             <Toolbar className={classes.signOutButton}>
+            <Avatar sx={{ width: 50, height: 50 }} alt="" src={currentUser.photoURL} />
                 <Typography variant="h6" noWrap component="div">
-                    Shashvat Patel
+                    &nbsp; {currentUser.displayName}
                 </Typography>
             </Toolbar>
             <Toolbar className={classes.signOutButton}>
@@ -36,36 +41,8 @@ const Sidebar = () => {
             <Divider />
             <Search />
             <Divider />
-            <List>
-                {friends.map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            {index % 2 === 0 ? <Avatar sx={{ bgcolor: blue[500] }}>{friends[index][0]}</Avatar>
-                                : <Avatar sx={{ bgcolor: pink[500] }}>{friends[index][0]}</Avatar>}
-                            &nbsp;
-                            &nbsp;
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {friends.map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            {
-                                index % 2 === 0 ? <Avatar sx={{ bgcolor: blue[500] }}>{friends[index][0]}</Avatar>
-                                    : <Avatar sx={{ bgcolor: pink[500] }}>{friends[index][0]}</Avatar>
-                            }
-                            &nbsp;
-                            &nbsp;
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </>
+            <Chats />
+        </div>
     )
 }
 
