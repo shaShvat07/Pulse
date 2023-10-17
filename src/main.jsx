@@ -5,6 +5,8 @@ import App from './App.jsx'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthContextProvider } from './context/AuthContext.jsx';
+import { Chat } from '@mui/icons-material';
+import { ChatContextProvider } from './context/ChatContext.jsx';
 
 const darkTheme = createTheme({
   palette: {
@@ -15,12 +17,14 @@ const darkTheme = createTheme({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthContextProvider>
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </ThemeProvider>,
+    <ChatContextProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </ThemeProvider>
+    </ChatContextProvider>
   </AuthContextProvider>
 
 )

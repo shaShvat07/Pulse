@@ -112,7 +112,7 @@ const Search = () => {
     } catch (err) { }
 
     setUser(null);
-    setUsername("")
+    setUsername("");
   };
 
   return (

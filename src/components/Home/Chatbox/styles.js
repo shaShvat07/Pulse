@@ -13,5 +13,8 @@ export default makeStyles(() => ({
     marginLeft: '-18px',
     borderRadius: '8px',
     padding: '10px',
+    '&::-webkit-scrollbar': {
+      width: '0.4em'
+    },
   }
 }));
