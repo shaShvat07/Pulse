@@ -10,7 +10,8 @@ import { db } from '../../../firebase';
 import { useEffect } from 'react';
 import { ChatContext } from '../../../context/ChatContext';
 import { Button } from '@mui/material';
-import { Typography } from '@mui/material'; // Added Typography component
+import { Typography } from '@mui/material';
+
 const Chats = () => {
   const [chats, setChats] = useState([]);
   const { currentUser } = useContext(AuthContext);
@@ -35,29 +36,31 @@ const Chats = () => {
   }
 
   return (
-    <List>
-      {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
-        <ListItem key={chat[0]} disablePadding>
-          <ListItemButton>
-            <Button
-              fullWidth
-              variant="text"
-              style={{ textTransform: 'none' }}
-              onClick={() => handleSelect(chat[1].userInfo)}
-            >
-              <Avatar src={chat[1].userInfo.photoURL} alt="" />
-              <div style={{ marginLeft: '10px' }}>
-                <Typography variant="body1" color="textPrimary"> {/* Added Typography component */}
-                  {chat[1].userInfo.displayName}
-                </Typography>
-                <div> {chat[1].lastMessage} </div>
-              </div>
-            </Button>
-          </ListItemButton>
-        </ListItem>
-      ))}
-    </List>
-  )
+    chats ? (
+      <List>
+        {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
+          <ListItem key={chat[0]} disablePadding>
+            <ListItemButton>
+              <Button
+                fullWidth
+                variant="text"
+                style={{ textTransform: 'none' }}
+                onClick={() => handleSelect(chat[1].userInfo)}
+              >
+                <Avatar src={chat[1].userInfo.photoURL} alt="" />
+                <div style={{ marginLeft: '10px' }}>
+                  <Typography variant="body1" color="textPrimary">
+                    {chat[1].userInfo.displayName}
+                  </Typography>
+                  <div>{chat[1].lastMessage}</div>
+                </div>
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    ) : null
+  );
 }
 
 export default Chats;

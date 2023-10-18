@@ -43,7 +43,10 @@ const Input = () => {
 
     const handleSend = async () => {
         try {
-            if (img) {
+            let uploadStarted = false;
+            
+            if (img && !uploadStarted) {
+                uploadStarted = true;
                 const storageRef = ref(storage, uuid());
                 const uploadTask = uploadBytesResumable(storageRef, img);
                 uploadTask.on(

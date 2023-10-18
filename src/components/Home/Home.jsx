@@ -7,7 +7,9 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import { Chatbox, Sidebar, Message, Search, Navbar, Input } from './index.js';
+import { Chatbox, Sidebar, Message, Search, Navbar, Input, Users } from './index.js';
+import { ChatContext } from '../../context/ChatContext';
+import { useContext } from 'react';
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
@@ -25,7 +27,9 @@ function ResponsiveDrawer(props) {
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
-
+  const { data } = useContext(ChatContext);
+  const check = data.chatId;
+  console.log(check);
   return (
     <Box sx={{ display: 'flex', overflowY: 'hidden' }}>
       <CssBaseline />
@@ -87,8 +91,15 @@ function ResponsiveDrawer(props) {
         sx={{ flexGrow: 1, p: 3, height: '99vh', width: { sm: '100%' } }}
       >
         <Toolbar />
-        <Chatbox />
-        <Input />
+        {
+          check ? 
+          <>
+            <Chatbox />
+            <Input />
+          </> :
+            <Users />
+        }
+
       </Box>
     </Box>
   );
