@@ -15,11 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import image from "../../pulse.png"; 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, storage, db } from '../../firebase.js';
+import { auth } from '../../firebase.js';
 import { signInWithEmailAndPassword } from "firebase/auth";
-
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>

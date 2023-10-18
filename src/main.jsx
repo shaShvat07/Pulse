@@ -14,7 +14,6 @@ const darkTheme = createTheme({
   },
 });
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthContextProvider>
     <ChatContextProvider>

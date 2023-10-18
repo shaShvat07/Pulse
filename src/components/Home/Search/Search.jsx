@@ -14,28 +14,49 @@ import { db } from "../../../firebase";
 import { AuthContext } from "../../../context/AuthContext";
 import { TextField, Button, Alert, Avatar, Typography } from "@mui/material"; // Importing MUI components
 import useStyles from './styles';
+import toast, { Toaster } from 'react-hot-toast';
 
-const Search = () => {
+const notify = () => toast.success('Friend Added', {
+  style: {
+    border: '1px solid #fff',
+    padding: '16px',
+    color: '#fff',
+    background: '#333',
+  },
+  iconTheme: {
+    primary: '#0077b6',
+    secondary: '#FFFAEE',
+  },
+});
+
+const Search = ({ handleDrawerToggle }) => {
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
-
   const { currentUser } = useContext(AuthContext);
-
+  let counter = 0;
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
       where("displayName", "==", username)
     );
-
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         setUser(doc.data());
+        counter++;
       });
-    } catch (err) {
+      console.log(counter);
+    } catch (error) {
       setErr(true);
+    }
+    if (counter === 0) {
+      console.log("attack");
+      toast.error("User Not Found");
+      setUsername("");
+    }else{
+      counter=0;
     }
   };
 
@@ -109,12 +130,14 @@ const Search = () => {
           });
         }
       }
-    } catch (err) { }
+      notify();
+      handleDrawerToggle();
+    } catch (err) {
+    }
 
     setUser(null);
     setUsername("");
   };
-
   return (
     <div className="search">
       <div className={classes.searchForm}>
@@ -130,14 +153,15 @@ const Search = () => {
           Search
         </Button>
       </div>
-      {err && <Alert severity="error">User not found!</Alert>}
       {user && (
-        <Button sx={{ width: '85%', display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginBottom: '10px' }} onClick={handleSelect} color="secondary" variant="outlined">
-          <Avatar alt="" src={user.photoURL} />
-          &nbsp;
-          &nbsp;
-          <Typography>  {user.displayName} </Typography>
-        </Button>
+        <>
+          <Button sx={{ width: '85%', display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginBottom: '10px' }} onClick={handleSelect} color="secondary" variant="outlined">
+            <Avatar alt="" src={user.photoURL} />
+            &nbsp;
+            &nbsp;
+            <Typography>  {user.displayName} </Typography>
+          </Button>
+        </>
       )}
     </div>
   );

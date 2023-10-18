@@ -10,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar';
 import { Chatbox, Sidebar, Message, Search, Navbar, Input, Users } from './index.js';
 import { ChatContext } from '../../context/ChatContext';
 import { useContext } from 'react';
+import toast from 'react-hot-toast';
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
@@ -22,14 +23,13 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <Sidebar />
+      <Sidebar handleDrawerToggle={handleDrawerToggle} />
     </div>
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
   const { data } = useContext(ChatContext);
   const check = data.chatId;
-  console.log(check);
   return (
     <Box sx={{ display: 'flex', overflowY: 'hidden' }}>
       <CssBaseline />

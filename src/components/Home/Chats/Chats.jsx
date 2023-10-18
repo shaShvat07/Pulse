@@ -12,7 +12,7 @@ import { ChatContext } from '../../../context/ChatContext';
 import { Button } from '@mui/material';
 import { Typography } from '@mui/material';
 
-const Chats = () => {
+const Chats = ( {handleDrawerToggle} ) => {
   const [chats, setChats] = useState([]);
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
@@ -32,7 +32,8 @@ const Chats = () => {
   }, [currentUser.uid]);
 
   const handleSelect = (u) => {
-    dispatch({ type: "CHANGE_USER", payload: u })
+    handleDrawerToggle();
+    dispatch({ type: "CHANGE_USER", payload: u });
   }
 
   return (
@@ -40,21 +41,16 @@ const Chats = () => {
       <List>
         {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
           <ListItem key={chat[0]} disablePadding>
-            <ListItemButton>
-              <Button
-                fullWidth
-                variant="text"
-                style={{ textTransform: 'none' }}
-                onClick={() => handleSelect(chat[1].userInfo)}
-              >
-                <Avatar src={chat[1].userInfo.photoURL} alt="" />
-                <div style={{ marginLeft: '10px' }}>
-                  <Typography variant="body1" color="textPrimary">
-                    {chat[1].userInfo.displayName}
-                  </Typography>
-                  <div>{chat[1].lastMessage}</div>
-                </div>
-              </Button>
+            <ListItemButton variant="text"
+              style={{ textTransform: 'none' }}
+              onClick={() => handleSelect(chat[1].userInfo)}>
+              <Avatar src={chat[1].userInfo.photoURL} alt="" />
+              <div style={{ marginLeft: '10px' }}>
+                <Typography variant="body1" color="textPrimary">
+                  {chat[1].userInfo.displayName}
+                </Typography>
+                <div style={{ color: '#00b4d8' }}>{chat[1].lastMessage}</div>
+              </div>
             </ListItemButton>
           </ListItem>
         ))}

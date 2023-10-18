@@ -20,6 +20,7 @@ import {
 import { db, storage } from '../../../firebase';
 import { v4 as uuid } from 'uuid';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import toast, { Toaster } from 'react-hot-toast';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -32,6 +33,18 @@ const VisuallyHiddenInput = styled('input')({
     whiteSpace: 'nowrap',
     width: 1,
 });
+const notify = () => toast.success('Message delivered', {
+    style: {
+        border: '1px solid #fff',
+        padding: '16px',
+        color: '#fff',
+        background: '#333',
+    },
+    iconTheme: {
+        primary: '#0077b6',
+        secondary: '#FFFAEE',
+    },
+});;
 
 const Input = () => {
 
@@ -44,7 +57,7 @@ const Input = () => {
     const handleSend = async () => {
         try {
             let uploadStarted = false;
-            
+
             if (img && !uploadStarted) {
                 uploadStarted = true;
                 const storageRef = ref(storage, uuid());
@@ -77,6 +90,7 @@ const Input = () => {
                             }
 
                         });
+                        notify();
                     }
                 );
             }
@@ -90,6 +104,7 @@ const Input = () => {
                             date: Timestamp.now(),
                         }),
                     });
+                    notify();
                 }
             }
             const chatDocRef = doc(db, "userChats", currentUser.uid);
@@ -154,9 +169,12 @@ const Input = () => {
                         </Fab>
                     </Grid>
                     <Grid item xs={1} style={{ marginLeft: '-10px' }} >
-                        <Fab color="primary" aria-label="add" onClick={handleSend}><SendIcon /></Fab>
+                        <Fab color="primary" aria-label="add" onClick={() => {
+                            handleSend();
+                        }}><SendIcon /></Fab>
+                         
                     </Grid>
-                </Grid >
+                </Grid>
             ) : (
                 <Grid container style={{ padding: '10px' }} >
                     <Grid item xs={9} style={{ marginLeft: '-25px' }}>
@@ -169,9 +187,15 @@ const Input = () => {
                         </Fab>
                     </Grid>
                     <Grid item xs={1} style={{ marginLeft: '38px' }}>
-                        <Fab color="primary" aria-label="add" onClick={handleSend}><SendIcon /></Fab>
+                        <Fab color="primary" aria-label="add" onClick={() => {
+                            handleSend();
+                        }}><SendIcon /></Fab>
+                        {/* <Toaster
+                            position="top-right"
+                            reverseOrder={false}
+                        /> */}
                     </Grid>
-                </Grid >
+                </Grid>
             )
             }
         </>

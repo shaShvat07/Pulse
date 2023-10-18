@@ -12,11 +12,10 @@ import { AuthContext } from '../../../context/AuthContext';
 import { useContext } from "react";
 import { Chats } from '../index';
 import { ChatContext } from '../../../context/ChatContext';
-const Sidebar = () => {
+import toast from 'react-hot-toast';
+const Sidebar = ( {handleDrawerToggle} ) => {
     const classes = useStyles();
     const { currentUser } = useContext(AuthContext);
-    const { data } = useContext(ChatContext);
-    const check = data.chatId;
     return (
         <div className={classes.wholeSidebar}>
             <div className={classes.navbarP}>
@@ -28,14 +27,17 @@ const Sidebar = () => {
                         </Typography>
                     </Toolbar>
                     <Toolbar className={classes.signOutButton}>
-                        <Button onClick={() => signOut(auth)} size="medium" color="error" variant="contained">Sign Out</Button>
+                        <Button onClick={() => {
+                            signOut(auth);
+                            toast.success("Signed Out Successfully");
+                            }} size="medium" color="error" variant="contained">Sign Out</Button>
                     </Toolbar>
                 </div>
             </div>
             <Divider />
-            <Search />
+            <Search handleDrawerToggle={handleDrawerToggle} />
             <Divider />
-            <Chats />
+            <Chats handleDrawerToggle={handleDrawerToggle} />
         </div>
     )
 }
