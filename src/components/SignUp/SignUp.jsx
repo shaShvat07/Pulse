@@ -18,6 +18,7 @@ import { styled } from '@mui/material/styles';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -53,18 +54,29 @@ const defaultTheme = createTheme({
 export default function SignUp() {
 
   const [err, setErr] = useState(false);
+  const [passwordError, setPasswordError] = useState(false); // Added state for password error
+  const [uploadProgress, setUploadProgress] = useState(0);
   const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
+
+    if (password.length < 6) { // Check password length
+      setPasswordError(true);
+      return;
+    }
+
+    setPasswordError(false);
+
     const firstName = data.get('firstName');
     const lastName = data.get('lastName');
     const displayName = firstName + " " + lastName;
-    console.log(displayName);
+    // console.log(displayName);
     const file = data.get('file');
-    console.log(file);
+    // console.log(file);
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -74,15 +86,7 @@ export default function SignUp() {
         (snapshot) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          // console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              // console.log('Upload is paused');
-              break;
-            case 'running':
-              // console.log('Upload is running');
-              break;
-          }
+          setUploadProgress(progress);
         },
         (error) => {
           setErr(true);
@@ -180,11 +184,19 @@ export default function SignUp() {
                 </Button>
               </Grid>
             </Grid>
+            {passwordError && <span>Password must be at least 6 characters.</span>} {/* Password error message */}
+            <Grid item xs={12} sx={{ mt: 1 }}>
+              <LinearProgress variant="determinate" value={uploadProgress} sx={{
+                width: '100%', borderRadius: '8px', '& .MuiLinearProgress-bar': {
+                  backgroundColor: '#4caf50', // Green color
+                }
+              }} /> {/* Progress bar */}
+            </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2, mb: 2 }}
             >
               Sign Up
             </Button>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef  } from "react";
+import React, { useEffect, useRef } from "react";
 import { SignUp, SignIn, Home } from './components/index.js';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from "./context/AuthContext.jsx";
@@ -31,16 +31,16 @@ const App = () => {
           <Route index element={
             <ProtectedRoute>
               <Home />
-              <Toaster
-                position="top-right"
-                reverseOrder={false}
-              />
             </ProtectedRoute>
           } />
           <Route path="login" element={<SignIn />} />
           <Route path="register" element={<SignUp />} />
         </Route>
       </Routes>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
     </BrowserRouter>
   );
 };

@@ -28,8 +28,8 @@ const Sidebar = ( {handleDrawerToggle} ) => {
                     </Toolbar>
                     <Toolbar className={classes.signOutButton}>
                         <Button onClick={() => {
-                            signOut(auth);
                             toast.success("Signed Out Successfully");
+                            signOut(auth);
                             }} size="medium" color="error" variant="contained">Sign Out</Button>
                     </Toolbar>
                 </div>
